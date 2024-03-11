@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+	version="2.2">
+	<persistence-unit name="MyProjectPersistenceUnit">
+		<!-- 데이터베이스 드라이버 및 연결 정보 -->
+		<properties>
+            <property name="javax.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mariadb:/zonef.cafe24.com:3306/zonef"/>
+            <property name="javax.persistence.jdbc.user" value="zonef"/>
+            <property name="javax.persistence.jdbc.password" value="whtjddn2495!"/>
+			<property name="hibernate.dialect"
+				value="org.hibernate.dialect.MariaDBDialect" /> <!-- H2 방언을 사용함을 명시 -->
+				
+			<!-- Hibernate 구성 -->
+			<property name="hibernate.show_sql" value="true" /> <!--SQL 쿼리문을 출력한다.-->
+			<property name="hibernate.format_sql" value="true" /> <!--쿼리문을 포맷팅하여 보여준다.-->
+			<property name="hibernate.use_sql_comments" value="true" /> <!--쿼리문 관련 정보를 주석으로 보여준다.-->
+			<property name="hibernate.hbm2ddl.auto" value="none" /> <!--하이버네이트에서 DDL을 조작한다 -->
+		</properties>
+	</persistence-unit>
+</persistence>

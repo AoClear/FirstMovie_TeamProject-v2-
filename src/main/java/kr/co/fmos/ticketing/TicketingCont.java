@@ -33,6 +33,7 @@ import kr.co.fmos.screen.ScreenDAO;
 import kr.co.fmos.screen.ScreenDTO;
 import kr.co.fmos.screenMovieInfo.ScreenMovieInfoDAO;
 import kr.co.fmos.screenMovieInfo.ScreenMovieInfoDTO;
+import kr.co.fmos.service.ScreenMovieInfoService;
 import kr.co.fmos.theaterBranch.TheaterBranchDAO;
 import kr.co.fmos.theaterBranch.TheaterBranchDTO;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,7 @@ public class TicketingCont {
 	private final TheaterBranchDAO theaterBranchDao;
 	private final MovieDAO movieDao;
 	private final ScreenMovieInfoDAO screenMovieInfoDao;
+	private final ScreenMovieInfoService screenMovieInfoService;
 	private final UserHavingCouponDAO userHavingCouponDao;
 	private final PaymentDAO paymentDao;
 	private final ScreenDAO screenDao;
@@ -61,7 +63,8 @@ public class TicketingCont {
 		mav.setViewName("ticketing/schedule");
 		mav.addObject("theaterBranchList", theaterBranchDao.list());
 		mav.addObject("movieList", movieDao.movieList());
-		mav.addObject("screenMovieInfoList", screenMovieInfoDao.list());
+		mav.addObject("screenMovieInfoList", screenMovieInfoService.listAllScreenMovieInfo());
+		System.out.println(regionDao.list().toString());
 		mav.addObject("now", new Date());
 		return mav;
 	}
