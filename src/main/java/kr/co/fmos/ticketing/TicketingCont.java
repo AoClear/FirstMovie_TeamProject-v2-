@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.servlet.http.HttpSession;
 import kr.co.fmos.coupon.UserHavingCouponDAO;
+import kr.co.fmos.dto.PointResponseDTO;
 import kr.co.fmos.member.MemberDAO;
 import kr.co.fmos.member.MemberDTO;
 import kr.co.fmos.movie.MovieDAO;
@@ -33,7 +35,11 @@ import kr.co.fmos.screen.ScreenDAO;
 import kr.co.fmos.screen.ScreenDTO;
 import kr.co.fmos.screenMovieInfo.ScreenMovieInfoDAO;
 import kr.co.fmos.screenMovieInfo.ScreenMovieInfoDTO;
+import kr.co.fmos.service.MovieService;
+import kr.co.fmos.service.PointService;
+import kr.co.fmos.service.RegionService;
 import kr.co.fmos.service.ScreenMovieInfoService;
+import kr.co.fmos.service.TheaterBranchService;
 import kr.co.fmos.theaterBranch.TheaterBranchDAO;
 import kr.co.fmos.theaterBranch.TheaterBranchDTO;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +48,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/ticketing")
 public class TicketingCont {
-	
+
 	private final HttpSession session;
-	private final RegionDAO regionDao;
+	private final RegionService regionService;
+	private final TheaterBranchService theaterBranchService;
 	private final TheaterBranchDAO theaterBranchDao;
+	private final MovieService movieService;
 	private final MovieDAO movieDao;
 	private final ScreenMovieInfoDAO screenMovieInfoDao;
 	private final ScreenMovieInfoService screenMovieInfoService;
@@ -54,17 +62,17 @@ public class TicketingCont {
 	private final ScreenDAO screenDao;
 	private final MemberDAO memberDao;
 	private final PaymentSeatDAO paymentSeatDao;
+	private final PointService pointService;
 	private final PointDAO pointDao;
 
 	@GetMapping("/schedule")
 	public ModelAndView schedule() {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("regionList", regionDao.list());
 		mav.setViewName("ticketing/schedule");
-		mav.addObject("theaterBranchList", theaterBranchDao.list());
-		mav.addObject("movieList", movieDao.movieList());
+		mav.addObject("regionList", regionService.listAllRegion());
+		mav.addObject("theaterBranchList", theaterBranchService.listAllTheaterBranch());
+		mav.addObject("movieList", movieService.listAllMovie());
 		mav.addObject("screenMovieInfoList", screenMovieInfoService.listAllScreenMovieInfo());
-		System.out.println(regionDao.list().toString());
 		mav.addObject("now", new Date());
 		return mav;
 	}
@@ -85,16 +93,13 @@ public class TicketingCont {
 		ModelAndView mav = new ModelAndView();
 		// 현재 로그인된 세션ID
 		String sessionID = (String) session.getAttribute("s_id").toString();
-		
-		// 사용자 보유포인트
-		int memberTotalPoint = pointDao.getMemberTotalPoint(sessionID);
-		
+
 		// 사용자 보유쿠폰
 		List<Map<String, Object>> userHavingCouponWithName = userHavingCouponDao.getUserHavingCoupon(sessionID);
-		
+
 		// 예매 정보
 		Map<String, Object> ticketingInfo = screenMovieInfoDao.getTicketingInfo(screenMovieInfoID);
-		
+
 		// 선택 좌석 JSON 문자열 파싱 및 정렬
 		String decodedSeats = null;
 		try {
@@ -126,7 +131,7 @@ public class TicketingCont {
 		mav.addObject("student", student);
 		mav.addObject("silver", silver);
 		mav.addObject("userHavingCouponList", userHavingCouponWithName);
-		mav.addObject("point", memberTotalPoint);
+		mav.addObject("point", pointService.getTotalPointByMemberId(sessionID));
 		mav.addObject("price", price);
 		return mav;
 	}

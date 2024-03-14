@@ -47,13 +47,13 @@
 						<div class="cinema_select_wrap cinemaSelect basicCinema">
 							<ul>
 								<c:forEach items="${regionList}" var="region">
-									<li class="depth1"><a href="#none">${region.region} </a>
+									<li class="depth1"><a href="#none">${region.name} </a>
 										<div class="depth2" style="display: none;">
 											<div class="mCustomScrollbar">
 												<ul>
 													<c:forEach items="${theaterBranchList}" var="theaterBranch">
 														<c:if
-															test="${region.getRegion_id() eq theaterBranch.region_id}">
+															test="${region.id eq theaterBranch.region_id}">
 															<li class="theaterBranchID"
 																data-theaterbranchid="${theaterBranch.branch_id}"><a
 																href="#none">${theaterBranch.branch_name}</a></li>

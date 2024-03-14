@@ -19,7 +19,7 @@ public class Movie {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "movie_id")
-	private Long movieId;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "movie_genre_id")

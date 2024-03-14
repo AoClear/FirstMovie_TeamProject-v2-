@@ -2,6 +2,7 @@ package kr.co.fmos.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -38,4 +39,7 @@ public class ScreenMovieInfo {
 
 	@Column(name = "movie_showing_time", nullable = false)
 	private LocalTime movieShowingTime;
+	
+	@OneToMany(mappedBy = "screenMovieInfo", cascade = CascadeType.ALL)
+	private List<ScreenMovieInfo> screenMovieInfos;
 }
